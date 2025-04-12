@@ -2,6 +2,11 @@ from evaluate import load
 import pandas as pd
 from tqdm import tqdm
 
+from informal_to_formal.utils.consts import (
+    EVALUATION_DATA_PRED_COLUMN,
+    EVALUATION_DATA_TARGET_COLUMN,
+)
+
 
 class Evaluator:
     """
@@ -9,7 +14,7 @@ class Evaluator:
 
     Attributes:
         evaluation_data (pd.DataFrame): DataFrame containing the evaluation data
-            with 'pred' and 'target' columns.
+            with columns for predictions and targets.
     """
 
     def __init__(self, evaluation_data: pd.DataFrame):
@@ -26,12 +31,12 @@ class Evaluator:
         """
 
         # Check if required columns are present
-        required_columns = ["source", "target"]
+        required_columns = [EVALUATION_DATA_PRED_COLUMN, EVALUATION_DATA_TARGET_COLUMN]
         for column in required_columns:
             if column not in self.evaluation_data.columns:
                 raise ValueError(f"Missing required column: '{column}'")
 
-        # Check if the 'source' and 'target' columns contain valid text data
+        # Check if the columns contain valid text data
         for column in required_columns:
             if not self.evaluation_data[column].apply(lambda x: isinstance(x, str)).all():
                 raise ValueError(f"Column '{column}' must contain only strings.")
@@ -56,7 +61,9 @@ class Evaluator:
 
         def compute_row_rouge(row):
             result = rouge.compute(
-                predictions=[row["source"]], references=[[row["target"]]], use_stemmer=use_stemmer
+                predictions=[row[EVALUATION_DATA_PRED_COLUMN]],
+                references=[[row[EVALUATION_DATA_TARGET_COLUMN]]],
+                use_stemmer=use_stemmer,
             )
 
             return result["rouge1"], result["rouge2"], result["rougeL"]
@@ -93,7 +100,9 @@ class Evaluator:
         def compute_row_bert_score(row):
             # For each row, wrap the reference in an inner list
             result = bert_score.compute(
-                predictions=[row["source"]], references=[[row["target"]]], lang=target_lang
+                predictions=[row[EVALUATION_DATA_PRED_COLUMN]],
+                references=[[row[EVALUATION_DATA_TARGET_COLUMN]]],
+                lang=target_lang,
             )
 
             return result["precision"][0], result["recall"][0], result["f1"][0]
