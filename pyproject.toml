@@ -30,6 +30,10 @@ dependencies = [
     "pytest",
     "python-dotenv",
     "scikit-learn",
+    "evaluate",
+    "bert_score",
+    "rouge_score",
+    "tqdm"
 ]
 requires-python = "~=3.11.0"
 
