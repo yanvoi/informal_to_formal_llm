@@ -38,6 +38,7 @@ lint:
 format:
 	isort informal_to_formal
 	black informal_to_formal
+	black notebooks
 
 
 

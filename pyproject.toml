@@ -16,7 +16,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License"
 ]
 dependencies = [
-    "black",
+    "black[jupyter]",
     "flake8",
     "ipython",
     "isort",
@@ -33,7 +33,9 @@ dependencies = [
     "evaluate",
     "bert_score",
     "rouge_score",
-    "tqdm"
+    "tqdm",
+    "mlflow",
+    "dagshub"
 ]
 requires-python = "~=3.11.0"
 
