@@ -3,12 +3,15 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
+
 class TextRequest(BaseModel):
     text: str
+
 
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
+
 
 @app.post("/formalize")
 def formalize_text(request: TextRequest):

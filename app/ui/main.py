@@ -1,5 +1,4 @@
 import requests
-
 import streamlit as st
 from streamlit_chat import message
 
@@ -45,7 +44,7 @@ class UI:
         ):
             message(past, is_user=True, key=f"{i}_user")
             message(generated, key=f"{i}")
-            
+
     def _get_api_response(self, user_input: str) -> dict:
         """
         Get the API response for the user's input.
@@ -56,9 +55,11 @@ class UI:
         Returns:
             The API response.
         """
-        response = requests.post("http://localhost:8000/formalize", json={"text": user_input})
+        response = requests.post(
+            "http://localhost:8000/formalize", json={"text": user_input}
+        )
         return response.json()
-        
+
     def show_main_page(self):
         """
         Display the main page of the application.
@@ -78,9 +79,7 @@ class UI:
 
         if user_input:
             response = self._get_api_response(user_input)
-            output = {
-                "answer": response["formalized_text"]
-            }
+            output = {"answer": response["formalized_text"]}
             st.session_state["past"].append(user_input)
             st.session_state["generated"].append(output["answer"])
 
