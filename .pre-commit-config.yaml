@@ -1,0 +1,53 @@
+exclude: '.git|.tox'
+default_stages: [commit]
+fail_fast: true
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-ast
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-xml
+      - id: check-yaml
+      - id: debug-statements
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  - repo: local
+    hooks:
+      - id: codespell
+        name: codespell
+        entry: bash -c 'cd app && make codespell'
+        language: system
+        types_or: [python, rst, markdown]
+        files: ^app/
+
+      - id: isort
+        name: isort
+        entry: bash -c 'cd app && make isort'
+        language: system
+        files: ^app/
+
+      - id: yesqa
+        name: yesqa
+        entry: bash -c 'cd app && make yesqa'
+        language: system
+        files: ^app/
+
+      - id: black
+        name: black
+        entry: bash -c 'cd app && make black'
+        language: system
+        files: ^app/
+
+      - id: ruff
+        name: ruff
+        entry: bash -c 'cd app && make ruff'
+        language: system
+        files: ^app/
