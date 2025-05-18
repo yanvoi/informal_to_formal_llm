@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from fastapi import FastAPI
+from api.llm.model import LLMService
 
 from .db_mongo import MongoFeedbackDatabase
 from .schemas import FeedbackRequest, TextRequest
@@ -7,6 +8,16 @@ from .schemas import FeedbackRequest, TextRequest
 load_dotenv()
 mongo_db = MongoFeedbackDatabase()
 app = FastAPI()
+
+
+def get_llm_service() -> LLMService:
+    return app.state.llm_service
+
+
+@app.on_event("startup")
+def startup_event():
+    # load smallest model supported by unsloth
+    app.state.llm_service = LLMService("meta-llama/Llama-2-7b-hf")
 
 
 @app.get("/")
@@ -24,7 +35,7 @@ def read_root():
 
 
 @app.post("/formalize")
-def formalize_text(request: TextRequest):
+def formalize_text(request: TextRequest, llm_service: LLMService = Depends(get_llm_service)):
     """
     Formalize the input text.
 
@@ -34,7 +45,7 @@ def formalize_text(request: TextRequest):
     Returns:
         dict: A dictionary containing the formalized text.
     """
-    return {"formalized_text": request.text.upper()}
+    return {"formalized_text": llm_service.formalize(request.text)}
 
 
 @app.post("/feedback")
