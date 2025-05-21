@@ -1,9 +1,9 @@
 from dagshub.data_engine import datasources
 from datasets import Dataset
 import pandas as pd
-from transformers import AutoTokenizer
+from transformers import PreTrainedTokenizer
 
-from data_preprocessor import DataPreprocessor
+from informal_to_formal.data_preprocessor.data_preprocessor import DataPreprocessor
 from informal_to_formal.utils.consts import ALPACA_PROMPT_TEMPLATE
 
 
@@ -23,14 +23,13 @@ class TrainingDataDataPreprocessor(DataPreprocessor):
         self.dataset_uri = dataset_uri
         self.prompt_template = prompt_template
 
-    def _formatting_prompts_func(self, examples, eos_token: str):
-        print(type(examples))  # TODO: adjust this typing
+    def _formatting_prompts_func(self, examples: Dataset, eos_token: str) -> dict[str, list[str]]:
         inputs = examples["zdanie_nieformalne"]
         targets = examples["zdanie_formalne"]
         formatted = []
 
         for inp, tgt in zip(inputs, targets):
-            text = self.prompt_template.format(input=inp, output=tgt)
+            text = self.prompt_template.format(inp, tgt)
             formatted.append(text + eos_token)
 
         return {"text": formatted}
@@ -70,13 +69,13 @@ class TrainingDataDataPreprocessor(DataPreprocessor):
     def preprocess(
         self,
         dataset: Dataset,
-        tokenizer: AutoTokenizer,
+        tokenizer: PreTrainedTokenizer,
     ) -> Dataset:
         """Preprocess the dataset by formatting the prompts.
 
         Args:
             dataset (Dataset): The dataset to preprocess.
-            tokenizer (AutoTokenizer): The tokenizer to use for tokenization.
+            tokenizer (PreTrainedTokenizer): The tokenizer to use for tokenization.
 
         Returns:
             Dataset: The preprocessed dataset.

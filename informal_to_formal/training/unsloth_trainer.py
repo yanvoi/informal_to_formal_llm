@@ -1,18 +1,19 @@
 import logging
 from typing import Any
 
+import click
 import dagshub
+from datasets import Dataset
 import mlflow
 import pandas as pd
-from datasets import Dataset
 from tqdm import tqdm
-from trainer import Trainer
-from transformers import AutoTokenizer, TrainingArguments
-from trl import SFTTrainer
+from transformers import PreTrainedModel, PreTrainedTokenizer
+from trl import SFTConfig, SFTTrainer
 from unsloth import FastLanguageModel, is_bfloat16_supported
 
 from informal_to_formal.data_preprocessor import TrainingDataDataPreprocessor
 from informal_to_formal.evaluation import Evaluator
+from informal_to_formal.training.trainer import Trainer
 from informal_to_formal.utils.consts import ALPACA_PROMPT_TEMPLATE, TEST_DATA_LIMIT
 from informal_to_formal.utils.inference import generate_language_model_output
 
@@ -81,8 +82,8 @@ class UnslothTrainer(Trainer):
             prompt_template=prompt_template,
         )
 
-        self.model: FastLanguageModel = None
-        self.tokenizer: AutoTokenizer = None
+        self.model: PreTrainedModel = None
+        self.tokenizer: PreTrainedTokenizer = None
 
     def _load_base_model(self):
         """Load the base model and tokenizer."""
@@ -92,10 +93,9 @@ class UnslothTrainer(Trainer):
             dtype=None,
             load_in_4bit=True,
         )
+        self.logger.info(f"Loaded base model: {self.model_name}")
 
-    def _load_and_preprocess_data(
-        self
-    ) -> tuple[Dataset, Dataset, Dataset]:
+    def _load_and_preprocess_data(self) -> tuple[Dataset, Dataset, Dataset]:
         """Load and preprocess the training, validation, and test datasets."""
         train_ds, val_ds, test_ds = self.data_preprocessor.load_data()
 
@@ -103,9 +103,11 @@ class UnslothTrainer(Trainer):
         val_ds = self.data_preprocessor.preprocess(val_ds, self.tokenizer)
         test_ds = self.data_preprocessor.preprocess(test_ds, self.tokenizer)
 
+        self.logger.info("Loaded and preprocessed train/val/test datasets.")
+
         return train_ds, val_ds, test_ds
 
-    def _apply_peft(self) -> FastLanguageModel:
+    def _apply_peft(self):
         """Apply PEFT (Parameter-Efficient Fine-Tuning) to the base model."""
         self.model = FastLanguageModel.get_peft_model(
             self.model,
@@ -127,11 +129,10 @@ class UnslothTrainer(Trainer):
             use_rslora=False,
             loftq_config=None,
         )
-        return self.model
 
-    def _get_training_config(self, run_name: str) -> TrainingArguments:
+    def _get_training_config(self, run_name: str) -> SFTConfig:
         """Get the training configuration for the SFTTrainer."""
-        return TrainingArguments(
+        return SFTConfig(
             per_device_train_batch_size=self.per_device_train_batch_size,
             gradient_accumulation_steps=self.gradient_accumulation_steps,
             warmup_steps=self.warmup_steps,
@@ -173,7 +174,7 @@ class UnslothTrainer(Trainer):
 
         return evaluate_df_metrics, avg_metrics
 
-    def train(self, experiment_name: str, run_name: str):
+    def train(self, experiment_name: str, run_name: str) -> tuple[Any, pd.DataFrame]:
         """Main method to train the model using the SFTTrainer.
 
         Args:
@@ -181,19 +182,19 @@ class UnslothTrainer(Trainer):
             run_name (str): Name of the mlflow run.
 
         Returns:
-            TODO
+            tuple[Any, pd.DataFrame]: A tuple containing the training statistics and detailed test dataset with metrics.
         """
         # Load base model and tokenizer
-        self._load_base_model()
-        self.logger.info(f"Loaded base model: {self.model_name}")
+        if not self.model or not self.tokenizer:
+            self._load_base_model()
 
         # Load and preprocess datasets for training
         train_ds, val_ds, test_ds = self._load_and_preprocess_data()
-        self.logger.info("Loaded and preprocessed train/val/test datasets.")
 
         # Initialize SFTTrainer
+        self._apply_peft()
         trainer = SFTTrainer(
-            model=self._apply_peft(),
+            model=self.model,
             tokenizer=self.tokenizer,
             train_dataset=train_ds,
             eval_dataset=val_ds,
@@ -217,4 +218,78 @@ class UnslothTrainer(Trainer):
             test_df_metrics, avg_metrics = self._evaluate_on_test_dataset()
             mlflow.log_metrics(avg_metrics)
 
-        return stats  # TODO: return stats, test_df_metrics, avg_metrics?
+        return stats, test_df_metrics
+
+    def save_and_upload_model(self, run_name: str):
+        """Save and upload the trained model to HuggingFace Hub."""
+        self.model.save_pretrained(run_name)
+        self.tokenizer.save_pretrained(run_name)
+
+        self.model.push_to_hub(run_name)
+        self.tokenizer.push_to_hub(run_name)
+
+
+@click.command()
+@click.option("--model_name", required=True)
+@click.option("--dataset_uri", required=True)
+@click.option("--run_name", required=True)
+@click.option("--experiment_name", required=True)
+@click.option("--prompt_template", default=ALPACA_PROMPT_TEMPLATE)
+@click.option("--per_device_train_batch_size", default=2)
+@click.option("--gradient_accumulation_steps", default=4)
+@click.option("--warmup_steps", default=15)
+@click.option("--num_train_epochs", default=2)
+@click.option("--eval_steps", default=100)
+@click.option("--learning_rate", default=2e-4)
+@click.option("--weight_decay", default=0.01)
+@click.option("--lr_scheduler_type", default="linear")
+@click.option("--seed", default=3407)
+@click.argument("extra_args", nargs=-1)
+def main(
+    model_name,
+    dataset_uri,
+    prompt_template,
+    run_name,
+    experiment_name,
+    per_device_train_batch_size,
+    gradient_accumulation_steps,
+    warmup_steps,
+    num_train_epochs,
+    eval_steps,
+    learning_rate,
+    weight_decay,
+    lr_scheduler_type,
+    seed,
+    extra_args,
+):
+    # Parse extra args
+    kwargs = {}
+    for i in range(0, len(extra_args), 2):
+        key = extra_args[i].lstrip("-")
+        value = extra_args[i + 1]
+        try:
+            val = int(value) if value.isdigit() else float(value)
+        except ValueError:
+            val = value
+        kwargs[key] = val
+
+    trainer = UnslothTrainer(
+        model_name=model_name,
+        dataset_uri=dataset_uri,
+        prompt_template=prompt_template,
+        per_device_train_batch_size=per_device_train_batch_size,
+        gradient_accumulation_steps=gradient_accumulation_steps,
+        warmup_steps=warmup_steps,
+        num_train_epochs=num_train_epochs,
+        eval_steps=eval_steps,
+        learning_rate=learning_rate,
+        weight_decay=weight_decay,
+        lr_scheduler_type=lr_scheduler_type,
+        seed=seed,
+        **kwargs,
+    )
+    trainer.train(experiment_name=experiment_name, run_name=run_name)
+
+
+if __name__ == "__main__":
+    main()

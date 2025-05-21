@@ -1,4 +1,4 @@
-from transformers import AutoTokenizer
+from transformers import PreTrainedModel, PreTrainedTokenizer
 from unsloth import FastLanguageModel
 
 from informal_to_formal.utils.consts import ALPACA_PROMPT_TEMPLATE
@@ -6,8 +6,8 @@ from informal_to_formal.utils.consts import ALPACA_PROMPT_TEMPLATE
 
 def generate_language_model_output(
     input: str,
-    model: FastLanguageModel,
-    tokenizer: AutoTokenizer,
+    model: PreTrainedModel,
+    tokenizer: PreTrainedTokenizer,
     alpaca_prompt: str = ALPACA_PROMPT_TEMPLATE,
     temperature=0.3,
 ) -> str:
@@ -15,8 +15,8 @@ def generate_language_model_output(
 
     Args:
         input (str): The input text to be processed by the model.
-        model (FastLanguageModel): The language model to be used for generation.
-        tokenizer (AutoTokenizer): The tokenizer for the language model.
+        model (PreTrainedModel): The language model to be used for generation.
+        tokenizer (PreTrainedTokenizer): The tokenizer for the language model.
         alpaca_prompt (str): The prompt template to be used for generation.
         temperature (float): The temperature to use.
             Defaults to 0.3.
