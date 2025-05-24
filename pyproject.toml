@@ -16,10 +16,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License"
 ]
 dependencies = [
-    "black[jupyter]",
-    "flake8",
-    "ipython",
-    "isort",
+    "ruff",
     "jupyterlab",
     "matplotlib",
     "mkdocs",
@@ -35,23 +32,21 @@ dependencies = [
     "rouge_score",
     "tqdm",
     "mlflow",
-    "dagshub"
+    "dagshub",
+    "unsloth",
+    "click",
 ]
 requires-python = "~=3.11.0"
 
-[tool.black]
+[tool.ruff]
 line-length = 99
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.git
-  | \.venv
-)/
-'''
+src = ["informal_to_formal"]
+include = ["pyproject.toml", "informal_to_formal/**/*.py"]
 
-[tool.isort]
-profile = "black"
-known_first_party = ["informal_to_formal"]
-force_sort_within_sections = true
+[tool.ruff.lint]
+extend-select = ["I"]  # Add import sorting
 
+[tool.ruff.lint.isort]
+known-first-party = ["informal_to_formal"]
+force-sort-within-sections = true
 
