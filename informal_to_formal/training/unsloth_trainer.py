@@ -1,9 +1,11 @@
 import logging
+import os
 from typing import Any
 
 import click
 import dagshub
 from datasets import Dataset
+from dotenv import load_dotenv
 import mlflow
 import pandas as pd
 from tqdm import tqdm
@@ -16,6 +18,8 @@ from informal_to_formal.evaluation import Evaluator
 from informal_to_formal.training.trainer import Trainer
 from informal_to_formal.utils.consts import ALPACA_PROMPT_TEMPLATE, TEST_DATA_LIMIT
 from informal_to_formal.utils.inference import generate_language_model_output
+
+load_dotenv()
 
 
 class UnslothTrainer(Trainer):
@@ -103,7 +107,7 @@ class UnslothTrainer(Trainer):
         val_ds = self.data_preprocessor.preprocess(val_ds, self.tokenizer)
         test_ds = self.data_preprocessor.preprocess(test_ds, self.tokenizer)
 
-        self.logger.info("Loaded and preprocessed train/val/test datasets.")
+        self.logger.info("Loaded and preprocessed train/val/test datasets")
 
         return train_ds, val_ds, test_ds
 
@@ -174,16 +178,27 @@ class UnslothTrainer(Trainer):
 
         return evaluate_df_metrics, avg_metrics
 
-    def train(self, experiment_name: str, run_name: str) -> tuple[Any, pd.DataFrame]:
+    def train(
+        self, experiment_name: str, run_name: str, upload_model: bool = True
+    ) -> tuple[Any, pd.DataFrame]:
         """Main method to train the model using the SFTTrainer.
 
         Args:
             experiment_name (str): Name of the mlflow experiment.
             run_name (str): Name of the mlflow run.
+            upload_model (bool): Whether to upload the trained model to HuggingFace Hub.
+                Defaults to True.
 
         Returns:
             tuple[Any, pd.DataFrame]: A tuple containing the training statistics and detailed test dataset with metrics.
         """
+        # Check if the HuggingFace token is set for model upload
+        if upload_model and not os.getenv("HF_TOKEN"):
+            raise ValueError(
+                "`HF_TOKEN` environment variable is not set. "
+                "Please set it to upload the model to HuggingFace Hub."
+            )
+
         # Load base model and tokenizer
         if not self.model or not self.tokenizer:
             self._load_base_model()
@@ -203,7 +218,8 @@ class UnslothTrainer(Trainer):
             dataset_num_proc=2,
             args=self._get_training_config(run_name),
         )
-        self.logger.info("Trainer with PEFT config initialized.")
+        self.logger.info("Trainer with PEFT config initialized")
+        self.logger.info(f"Starting training with run name: {run_name}")
 
         mlflow.set_experiment(experiment_name)
         with mlflow.start_run(run_name=run_name):
@@ -215,42 +231,68 @@ class UnslothTrainer(Trainer):
             mlflow.log_param("dataset_uri", self.dataset_uri)
 
             # Evaluate on test dataset
+            self.logger.info("Evaluating on test dataset")
             test_df_metrics, avg_metrics = self._evaluate_on_test_dataset()
             mlflow.log_metrics(avg_metrics)
+            self.logger.info(f"Test dataset evaluation metrics: {avg_metrics}")
+
+        self.logger.info("Training completed")
+
+        if upload_model:
+            self.logger.info("Uploading model to HuggingFace Hub")
+            self.upload_model_to_hub(run_name)
 
         return stats, test_df_metrics
 
-    def save_and_upload_model(self, run_name: str):
-        """Save and upload the trained model to HuggingFace Hub."""
-        self.model.save_pretrained(run_name)
-        self.tokenizer.save_pretrained(run_name)
-
-        self.model.push_to_hub(run_name)
-        self.tokenizer.push_to_hub(run_name)
+    def upload_model_to_hub(self, run_name: str):
+        """Upload the trained model to HuggingFace Hub."""
+        self.model.push_to_hub_merged(
+            run_name, self.tokenizer, save_method="merged_16bit", token=os.getenv("HF_TOKEN")
+        )
 
 
 @click.command()
-@click.option("--model_name", required=True)
-@click.option("--dataset_uri", required=True)
-@click.option("--run_name", required=True)
-@click.option("--experiment_name", required=True)
-@click.option("--prompt_template", default=ALPACA_PROMPT_TEMPLATE)
-@click.option("--per_device_train_batch_size", default=2)
-@click.option("--gradient_accumulation_steps", default=4)
-@click.option("--warmup_steps", default=15)
-@click.option("--num_train_epochs", default=2)
-@click.option("--eval_steps", default=100)
-@click.option("--learning_rate", default=2e-4)
-@click.option("--weight_decay", default=0.01)
-@click.option("--lr_scheduler_type", default="linear")
-@click.option("--seed", default=3407)
-@click.argument("extra_args", nargs=-1)
+@click.option(
+    "--model_name", required=True, help="Name of the base model to be used for training."
+)
+@click.option("--dataset_uri", required=True, help="URI for the training dataset.")
+@click.option("--run_name", required=True, help="Name of the MLFlow run.")
+@click.option("--experiment_name", required=True, help="Name of the MLFlow experiment.")
+@click.option(
+    "--upload_model", default=True, help="Whether to upload the trained model to HuggingFace Hub."
+)
+@click.option(
+    "--prompt_template", default=ALPACA_PROMPT_TEMPLATE, help="Template for the prompts."
+)
+@click.option(
+    "--per_device_train_batch_size", default=2, help="Batch size per device during training."
+)
+@click.option(
+    "--gradient_accumulation_steps", default=4, help="Number of gradient accumulation steps."
+)
+@click.option(
+    "--warmup_steps", default=15, help="Number of warmup steps for learning rate scheduling."
+)
+@click.option("--num_train_epochs", default=2, help="Number of training epochs.")
+@click.option("--eval_steps", default=100, help="Evaluation steps during training.")
+@click.option("--learning_rate", default=2e-4, help="Learning rate for the optimizer.")
+@click.option("--weight_decay", default=0.01, help="Weight decay for the optimizer.")
+@click.option(
+    "--lr_scheduler_type", default="linear", help="Type of learning rate scheduler to use."
+)
+@click.option("--seed", default=3407, help="Random seed for reproducibility.")
+@click.argument(
+    "extra_args",
+    nargs=-1,
+    help="Additional arguments for training in key-value format (e.g., --key value).",
+)
 def main(
     model_name,
     dataset_uri,
     prompt_template,
     run_name,
     experiment_name,
+    upload_model,
     per_device_train_batch_size,
     gradient_accumulation_steps,
     warmup_steps,
@@ -288,7 +330,7 @@ def main(
         seed=seed,
         **kwargs,
     )
-    trainer.train(experiment_name=experiment_name, run_name=run_name)
+    trainer.train(experiment_name=experiment_name, run_name=run_name, upload_model=upload_model)
 
 
 if __name__ == "__main__":
