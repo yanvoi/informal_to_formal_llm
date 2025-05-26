@@ -35,7 +35,7 @@ class UnslothTrainer(Trainer):
         per_device_train_batch_size (int): Batch size per device during training.
         gradient_accumulation_steps (int): Number of gradient accumulation steps.
         warmup_steps (int): Number of warmup steps for learning rate scheduling.
-        num_train_epochs (int): Number of training epochs.
+        num_train_epochs (float): Number of training epochs.
         eval_steps (int): Evaluation steps during training.
         learning_rate (float): Learning rate for the optimizer.
         weight_decay (float): Weight decay for the optimizer.
@@ -53,7 +53,7 @@ class UnslothTrainer(Trainer):
         per_device_train_batch_size: int = 2,
         gradient_accumulation_steps: int = 4,
         warmup_steps: int = 15,
-        num_train_epochs: int = 1,
+        num_train_epochs: float = 2,
         eval_steps: int = 100,
         learning_rate: float = 2e-4,
         weight_decay: float = 0.01,
@@ -265,6 +265,9 @@ class UnslothTrainer(Trainer):
     "--prompt_template", default=ALPACA_PROMPT_TEMPLATE, help="Template for the prompts."
 )
 @click.option(
+    "--max_seq_length", default=2048, help="Maximum sequence length for the model."
+)
+@click.option(
     "--per_device_train_batch_size", default=2, help="Batch size per device during training."
 )
 @click.option(
@@ -273,26 +276,23 @@ class UnslothTrainer(Trainer):
 @click.option(
     "--warmup_steps", default=15, help="Number of warmup steps for learning rate scheduling."
 )
-@click.option("--num_train_epochs", default=2, help="Number of training epochs.")
+@click.option("--num_train_epochs", type=float, default=2, help="Number of training epochs.")
 @click.option("--eval_steps", default=100, help="Evaluation steps during training.")
-@click.option("--learning_rate", default=2e-4, help="Learning rate for the optimizer.")
-@click.option("--weight_decay", default=0.01, help="Weight decay for the optimizer.")
+@click.option("--learning_rate", type=float, default=2e-4, help="Learning rate for the optimizer.")
+@click.option("--weight_decay", type=float, default=0.01, help="Weight decay for the optimizer.")
 @click.option(
     "--lr_scheduler_type", default="linear", help="Type of learning rate scheduler to use."
 )
 @click.option("--seed", default=3407, help="Random seed for reproducibility.")
-@click.argument(
-    "extra_args",
-    nargs=-1,
-    help="Additional arguments for training in key-value format (e.g., --key value).",
-)
+@click.argument("extra_args", nargs=-1)
 def main(
     model_name,
     dataset_uri,
-    prompt_template,
     run_name,
     experiment_name,
     upload_model,
+    prompt_template,
+    max_seq_length,
     per_device_train_batch_size,
     gradient_accumulation_steps,
     warmup_steps,
@@ -319,6 +319,7 @@ def main(
         model_name=model_name,
         dataset_uri=dataset_uri,
         prompt_template=prompt_template,
+        max_seq_length=max_seq_length,
         per_device_train_batch_size=per_device_train_batch_size,
         gradient_accumulation_steps=gradient_accumulation_steps,
         warmup_steps=warmup_steps,
