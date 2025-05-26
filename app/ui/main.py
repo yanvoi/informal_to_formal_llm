@@ -25,7 +25,7 @@ class UI:
         )
         return response.json()
 
-    def _send_feedback(self, input, output, feedback):
+    def _send_feedback(self, user_input, api_output, feedback):
         """
         Send feedback to the API.
 
@@ -43,7 +43,7 @@ class UI:
         st.title("Formalizacja tekstu 🌐️")
 
         with st.form(key="formalizer_form"):
-            input = st.text_area(
+            user_input = st.text_area(
                 "Wpisz treść do sformalizowania",
                 st.session_state.get("input_text", ""),
                 height=100,
@@ -62,9 +62,9 @@ class UI:
             st.session_state.feedback_message = None
             st.rerun()
 
-        if submit and input:
-            response = self._get_api_response(input)
-            st.session_state.input_text = input
+        if submit and user_input:
+            response = self._get_api_response(user_input)
+            st.session_state.input_text = user_input
             st.session_state.formalized_text = response["formalized_text"]
             st.session_state.feedback_message = None
             st.rerun()
