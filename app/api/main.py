@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from api.llm.model import LLMService
+from api.llm.utils import REPO_ID
 
 from .db_mongo import MongoFeedbackDatabase
 from .schemas import FeedbackRequest, TextRequest
@@ -16,8 +17,7 @@ def get_llm_service() -> LLMService:
 
 @app.on_event("startup")
 def startup_event():
-    # load smallest model supported by unsloth
-    app.state.llm_service = LLMService("meta-llama/Llama-2-7b-hf")
+    app.state.llm_service = LLMService(REPO_ID)
 
 
 @app.get("/")
