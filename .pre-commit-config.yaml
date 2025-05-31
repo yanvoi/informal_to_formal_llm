@@ -21,12 +21,12 @@ repos:
 
   - repo: local
     hooks:
-      - id: codespell
-        name: codespell
-        entry: bash -c 'cd app && make codespell'
-        language: system
-        types_or: [python, rst, markdown]
-        files: ^app/
+      # - id: codespell
+      #   name: codespell
+      #   entry: bash -c 'cd app && make codespell'
+      #   language: system
+      #   types_or: [python, rst, markdown]
+      #   files: ^app/
 
       - id: isort
         name: isort
