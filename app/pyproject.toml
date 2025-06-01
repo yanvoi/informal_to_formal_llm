@@ -6,7 +6,7 @@ authors = ["yanvoi <janwojciechowski@op.pl>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.11"
 fastapi = "^0.115.12"
 uvicorn = "^0.34.2"
 streamlit = "^1.45.1"
@@ -16,6 +16,8 @@ yesqa = "^1.5.0"
 black = "^25.1.0"
 ruff = "^0.11.10"
 sqlalchemy = "^2.0.41"
+pymongo = "^4.13.0"
+python-dotenv = "^1.1.0"
 
 
 [build-system]
