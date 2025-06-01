@@ -1,8 +1,11 @@
-from fastapi import FastAPI, Depends
-from .schemas import TextRequest, FeedbackRequest
-from .db import Feedback, get_db
+from dotenv import load_dotenv
+from fastapi import FastAPI
 
+from .db_mongo import MongoFeedbackDatabase
+from .schemas import FeedbackRequest, TextRequest
 
+load_dotenv()
+mongo_db = MongoFeedbackDatabase()
 app = FastAPI()
 
 
@@ -35,23 +38,26 @@ def formalize_text(request: TextRequest):
 
 
 @app.post("/feedback")
-def save_feedback(feedback_req: FeedbackRequest, db=Depends(get_db)):
+def save_feedback(feedback_req: FeedbackRequest) -> dict:
     """
     Save user feedback to the database.
 
     Args:
         feedback_req (FeedbackRequest): The request body containing user input, API output, and feedback type.
-        db: Database session dependency.
 
     Returns:
         dict: A dictionary with the status message.
     """
-    feedback = Feedback(
-        user_input=feedback_req.user_input,
-        api_output=feedback_req.api_output,
-        feedback=feedback_req.feedback,
-    )
-    db.add(feedback)
-    db.commit()
-    db.refresh(feedback)
+    mongo_db.add_feedback(feedback_req)
     return {"status": "success"}
+
+
+@app.get("/feedback", response_model=list[FeedbackRequest])
+def get_feedback() -> list[FeedbackRequest]:
+    """
+    Retrieve all feedback from the database.
+
+    Returns:
+        list[FeedbackRequest]: A list of feedback documents.
+    """
+    return mongo_db.get_all_feedback()
