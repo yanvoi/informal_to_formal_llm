@@ -1,50 +1,53 @@
 
-# 📝 Formalizacja Tekstu w Języku Polskim
+# 📝 Text Formalization in the Polish Language
 
-## 📌 Opis projektu
+## 📌 Project Description
 
-Celem projektu jest stworzenie systemu, który automatycznie przekształca nieformalne wypowiedzi w języku polskim na ich formalne odpowiedniki. Tego typu narzędzie znajduje zastosowanie m.in. w środowiskach akademickich, zawodowych i administracyjnych, gdzie konieczne jest zachowanie profesjonalnego tonu wypowiedzi.
+The goal of this project is to create a system that automatically transforms informal Polish utterances into their formal equivalents. Such a tool is particularly useful in academic, professional, and administrative contexts, where maintaining a professional tone is essential.
 
-Rozwiązanie opiera się na uczeniu maszynowym – przygotowaliśmy syntetyczny zbiór danych (pary: zdanie nieformalne – zdanie formalne), który posłużył do trenowania i ewaluacji modelu językowego.
+The solution is based on machine learning – we prepared a synthetic dataset (pairs: informal sentence – formal sentence) used to train and evaluate the language model.
 
-Syntetyczny korpus zdań został wygenerowany z użyciem dostępnych dużych modeli językowych (LLM), w tym m.in. modeli instrukcyjnych w trybie chatowym. Umożliwiło to szybkie pozyskanie dużej liczby przykładów o wysokiej jakości językowej, co znacząco wpłynęło na skuteczność procesu fine-tuningu.
+The synthetic corpus was generated using available large language models (LLMs), including instruction-tuned models in chat mode. This enabled the rapid creation of a large number of high-quality linguistic examples, which significantly improved the effectiveness of the fine-tuning process.
 
-Modele były trenowane i ewaluowane w środowisku Google Colab, co zapewniło elastyczność oraz łatwy dostęp do zasobów GPU, pozwalając na efektywne przeprowadzenie eksperymentów bez konieczności konfiguracji lokalnego środowiska obliczeniowego.
+The models were trained and evaluated in the Google Colab environment, providing flexibility and easy access to GPU resources. This allowed efficient experimentation without the need to configure a local computing environment.
 
-Model został udostępniony poprzez REST API oraz zintegrowany z aplikacją webową stworzoną w Streamlit. Interfejs użytkownika zawiera również komponent feedbackowy umożliwiający ocenę jakości predykcji (thumbs up/down), który zapisuje dane do bazy.
+The trained model is available via a REST API and integrated with a web application built using Streamlit. The user interface also includes a feedback component (thumbs up/down), which stores user ratings in a database.
 
-Szczegółowy opis eksperymentów (fine-tuning, metryki, porównania modeli) jest dostępny w systemie MLflow:  
+A detailed description of the experiments (fine-tuning, metrics, model comparisons) is available in the MLflow system:
 🔗 [Zobacz eksperymenty w MLflow](https://dagshub.com/informal2formal/mlflow/experiments)
 
 ---
 
-## ⚙️ Funkcje aplikacji
+## ⚙️ Application Features
 
-- 🔄 Automatyczna formalizacja tekstu (z nieformalnego na formalny)
-- 🤖 Hostowanie wytrenowanego modelu na Hugging Face Hub
-- 🌐 REST API zintegrowane z frontendem (Streamlit)
-- 👍👎 Komponent feedbacku (zapisywanie opinii użytkownika do bazy danych)
-- 📈 Metryki ewaluacji BLEU / ROUGE dostępne w MLflow
-- 🔒 Obsługa błędów i walidacja danych wejściowych
+- 🔄 Automatic text formalization (from informal to formal)
+- 🤖 Hosting of the trained model on Hugging Face Hub
+- 🌐 REST API integrated with the frontend (Streamlit)
+- 👍👎 Feedback component (saves user ratings to a database)
+- 📈 Evaluation metrics BLEU / ROUGE available in MLflow
+- 🔒 Error handling and input data validation
 
 ---
 
-## 🚀 Instrukcja uruchomienia
+## 🚀 Launch Instructions
 
-### 1. Klonowanie repozytorium
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/yanvoi/informal_to_formal_llm.git
 cd informal_to_formal_llm
 ```
 
-### 2. Uruchomienie środowiska
+### 2. Launch the environment
 
-Instrukcje dotyczące uruchomienia środowiska znajdują się w pliku `README.md` w folderze `app`.
+Instructions for setting up the environment can be found in the `README.md` file in the `app` folder.
+
+
+🛠️ Note: All Python module versions and dependencies are listed in the pyproject.toml file.
 
 ---
 
-## 📁 Struktura projektu
+## 📁 Project Structure
 
 ```
 informal_to_formal_llm/
@@ -69,7 +72,7 @@ informal_to_formal_llm/
 
 ---
 
-## 📄 Autorzy
+## 📄 Authors
 
 - Jan Wojciechowski – 473553  
 - Sebastian Jerzykiewicz – 473615  
