@@ -1,5 +1,7 @@
 from dotenv import load_dotenv
 from fastapi import FastAPI
+from api.llm.model import LLMService
+from api.llm.utils import REPO_ID
 
 from .db_mongo import MongoFeedbackDatabase
 from .schemas import FeedbackRequest, TextRequest
@@ -7,6 +9,15 @@ from .schemas import FeedbackRequest, TextRequest
 load_dotenv()
 mongo_db = MongoFeedbackDatabase()
 app = FastAPI()
+
+
+def get_llm_service() -> LLMService:
+    return app.state.llm_service
+
+
+@app.on_event("startup")
+def startup_event():
+    app.state.llm_service = LLMService(REPO_ID)
 
 
 @app.get("/")
@@ -24,7 +35,7 @@ def read_root():
 
 
 @app.post("/formalize")
-def formalize_text(request: TextRequest):
+def formalize_text(request: TextRequest, llm_service: LLMService = Depends(get_llm_service)):
     """
     Formalize the input text.
 
@@ -34,7 +45,7 @@ def formalize_text(request: TextRequest):
     Returns:
         dict: A dictionary containing the formalized text.
     """
-    return {"formalized_text": request.text.upper()}
+    return {"formalized_text": llm_service.formalize(request.text)}
 
 
 @app.post("/feedback")
