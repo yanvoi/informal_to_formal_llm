@@ -53,21 +53,22 @@ Instructions for setting up the environment can be found in the `README.md` file
 informal_to_formal_llm/
 │
 ├── app/
-│   ├── api/                 # Katalog z kodem API
-│   │   ├── __init__.py      # Inicjalizacja pakietu
-│   │   ├── main.py          # Główny plik API
-│   ├── ui/                  # Katalog z kodem interfejsu użytkownika
-│   │   ├── main.py          # Główny plik aplikacji Streamlit
-│   ├── README.md            # Instrukcje uruchomienia aplikacji
+│   ├── api/                 # API code
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   ├── ui/                  # Streamlit frontend
+│   │   ├── main.py
+│   ├── README.md            # App-specific setup instructions
 ├── informal_to_formal/
-│   ├── data_preprocessor/   # Katalog z kodem do przetwarzania danych
-│   ├── evaluation/          # Katalog z kodem do ewaluacji modelu
-│   ├── training/            # Katalog z kodem do trenowania modelu
-│   ├── utils/               # Katalog z pomocniczymi funkcjami
-│   ├── __init__.py          # Inicjalizacja pakietu
-├── notebooks/               # Katalog z notatnikami Jupyter do trenowania i ewaluacji modeli
-├── tests/                   # Katalog z testami jednostkowymi
-├── README.md                # Główny plik README projektu (ten plik)
+│   ├── data_preprocessor/   # Data preprocessing scripts
+│   ├── evaluation/          # Model evaluation tools
+│   ├── training/            # Model training scripts
+│   ├── utils/               # Helper functions
+│   ├── __init__.py
+├── notebooks/               # Jupyter notebooks for experimentation
+├── tests/                   # Unit tests
+├── pyproject.toml           # Project dependencies and configuration
+├── README.md                # Main project README (this file)
 ```
 
 ---
