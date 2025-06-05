@@ -24,6 +24,16 @@ It contains pairs of informal and formal Polish sentences generated using instru
 
 ---
 
+## 🤖 Hugging Face Model
+
+The final trained model is publicly available on the 🤗 **Hugging Face Hub**:
+
+🔗 [directtt/Llama-PLLuM-8B-instruct-informal2formal-SFT](https://huggingface.co/directtt/Llama-PLLuM-8B-instruct-informal2formal-SFT)
+
+In the repository, you can find the model card with detailed information about the training process, evaluation metrics, and usage instructions.
+
+---
+
 ## ⚙️ Application Features
 
 - 🔄 Automatic text formalization (from informal to formal)
