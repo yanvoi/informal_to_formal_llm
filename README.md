@@ -14,7 +14,14 @@ The models were trained and evaluated in the Google Colab environment, providing
 The trained model is available via a REST API and integrated with a web application built using Streamlit. The user interface also includes a feedback component (thumbs up/down), which stores user ratings in a database.
 
 A detailed description of the experiments (fine-tuning, metrics, model comparisons) is available in the MLflow system:
-🔗 [Zobacz eksperymenty w MLflow](https://dagshub.com/informal2formal/mlflow/experiments)
+🔗 [Check the experiments on MLflow](https://dagshub.com/informal2formal/mlflow/experiments)
+
+## 📄 Dataset
+The synthetic dataset used for training and evaluation is publicly available on DagsHub:
+
+🔗 [Check the generated dataset on DagsHub](https://dagshub.com/informal2formal/mlflow/datasets)
+
+It contains pairs of informal and formal Polish sentences generated using instruction-tuned large language models.
 
 ---
 
