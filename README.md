@@ -1,61 +1,87 @@
-# informal_to_formal_llm
 
-<a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
-    <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
-</a>
+# 📝 Text Formalization in the Polish Language
 
-Informal2formal LLM for Polish language.
+## 📌 Project Description
 
-## Project Organization
+The goal of this project is to create a system that automatically transforms informal Polish utterances into their formal equivalents. Such a tool is particularly useful in academic, professional, and administrative contexts, where maintaining a professional tone is essential.
 
-```
-├── LICENSE            <- Open-source license if one is chosen
-├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
-├── README.md          <- The top-level README for developers using this project.
-├── data
-│   ├── external       <- Data from third party sources.
-│   ├── interim        <- Intermediate data that has been transformed.
-│   ├── processed      <- The final, canonical data sets for modeling.
-│   └── raw            <- The original, immutable data dump.
-│
-├── docs               <- A default mkdocs project; see www.mkdocs.org for details
-│
-├── models             <- Trained and serialized models, model predictions, or model summaries
-│
-├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-│                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `1.0-jqp-initial-data-exploration`.
-│
-├── pyproject.toml     <- Project configuration file with package metadata for 
-│                         informal_to_formal and configuration for tools like black
-│
-├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-│
-├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-│   └── figures        <- Generated graphics and figures to be used in reporting
-│
-├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-│                         generated with `pip freeze > requirements.txt`
-│
-├── setup.cfg          <- Configuration file for flake8
-│
-└── informal_to_formal   <- Source code for use in this project.
-    │
-    ├── __init__.py             <- Makes informal_to_formal a Python module
-    │
-    ├── config.py               <- Store useful variables and configuration
-    │
-    ├── dataset.py              <- Scripts to download or generate data
-    │
-    ├── features.py             <- Code to create features for modeling
-    │
-    ├── modeling                
-    │   ├── __init__.py 
-    │   ├── predict.py          <- Code to run model inference with trained models          
-    │   └── train.py            <- Code to train models
-    │
-    └── plots.py                <- Code to create visualizations
+The solution is based on machine learning – we prepared a synthetic dataset (pairs: informal sentence – formal sentence) used to train and evaluate the language model.
+
+The synthetic corpus was generated using available large language models (LLMs), including instruction-tuned models in chat mode. This enabled the rapid creation of a large number of high-quality linguistic examples, which significantly improved the effectiveness of the fine-tuning process.
+
+The models were trained and evaluated in the Google Colab environment, providing flexibility and easy access to GPU resources. This allowed efficient experimentation without the need to configure a local computing environment.
+
+The trained model is available via a REST API and integrated with a web application built using Streamlit. The user interface also includes a feedback component (thumbs up/down), which stores user ratings in a database.
+
+A detailed description of the experiments (fine-tuning, metrics, model comparisons) is available in the MLflow system:
+🔗 [Check the experiments on MLflow](https://dagshub.com/informal2formal/mlflow/experiments)
+
+## 📄 Dataset
+The synthetic dataset used for training and evaluation is publicly available on DagsHub:
+
+🔗 [Check the generated dataset on DagsHub](https://dagshub.com/informal2formal/mlflow/datasets)
+
+It contains pairs of informal and formal Polish sentences generated using instruction-tuned large language models.
+
+---
+
+## ⚙️ Application Features
+
+- 🔄 Automatic text formalization (from informal to formal)
+- 🤖 Hosting of the trained model on Hugging Face Hub
+- 🌐 REST API integrated with the frontend (Streamlit)
+- 👍👎 Feedback component (saves user ratings to a database)
+- 📈 Evaluation metrics BLEU / ROUGE available in MLflow
+- 🔒 Error handling and input data validation
+
+---
+
+## 🚀 Launch Instructions
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/yanvoi/informal_to_formal_llm.git
+cd informal_to_formal_llm
 ```
 
---------
+### 2. Launch the environment
 
+Instructions for setting up the environment can be found in the `README.md` file in the `app` folder.
+
+
+🛠️ Note: All Python module versions and dependencies are listed in the pyproject.toml file.
+
+---
+
+## 📁 Project Structure
+
+```
+informal_to_formal_llm/
+│
+├── app/
+│   ├── api/                 # API code
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   ├── ui/                  # Streamlit frontend
+│   │   ├── main.py
+│   ├── README.md            # App-specific setup instructions
+├── informal_to_formal/
+│   ├── data_preprocessor/   # Data preprocessing scripts
+│   ├── evaluation/          # Model evaluation tools
+│   ├── training/            # Model training scripts
+│   ├── utils/               # Helper functions
+│   ├── __init__.py
+├── notebooks/               # Jupyter notebooks for experimentation
+├── tests/                   # Unit tests
+├── pyproject.toml           # Project dependencies and configuration
+├── README.md                # Main project README (this file)
+```
+
+---
+
+## 📄 Authors
+
+- Jan Wojciechowski – 473553  
+- Sebastian Jerzykiewicz – 473615  
+- Jędrzej Rybczyński – 456532
