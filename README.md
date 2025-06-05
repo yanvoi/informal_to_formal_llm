@@ -1,4 +1,3 @@
-
 # 📝 Text Formalization in the Polish Language
 
 ## 📌 Project Description
@@ -80,8 +79,37 @@ informal_to_formal_llm/
 
 ---
 
+## 🧠 Techniques Used
+
+### Few-Shot Prompting
+Few-shot prompting was employed to guide the large language models (LLMs) in generating high-quality synthetic data. By providing a few examples of informal-to-formal transformations, the models were able to generalize and produce a diverse set of sentence pairs.
+
+### Fine-Tuning
+The LLMs were fine-tuned on the synthetic dataset to specialize in the task of text formalization. This process involved adjusting the pre-trained weights of the models to better align with the specific task requirements.
+
+### Quantization
+Quantization techniques were applied to reduce the size of the trained models, making them more efficient for deployment without significant loss in performance. This step was crucial for integrating the models into the web application and REST API.
+
+### Evaluation Metrics
+The performance of the models was evaluated using BLEU and ROUGE metrics. These metrics provided insights into the quality of the formalized text compared to the reference sentences.
+
+### Data Augmentation
+Synthetic data generation was a key component of the training process. By leveraging instruction-tuned LLMs, a large and diverse dataset was created, which significantly improved the robustness of the models.
+
+---
+
 ## 📄 Authors
 
 - Jan Wojciechowski – 473553  
 - Sebastian Jerzykiewicz – 473615  
 - Jędrzej Rybczyński – 456532
+
+## 🔚 Conclusions
+
+- We did not use the GYAFC corpus, despite our efforts to obtain it, for the following reasons:
+  1. Translating it to Polish would have been a significant challenge.
+  2. The quality of the corpus was rather poor, with sentences often being ambiguous.
+
+- Unsloth provided a better interface for fine-tuning and utilizing large language models (LLMs), making it our preferred choice.
+
+- The performance of the trained models improved with an increasing number of epochs, but the improvements plateaued after two epochs, showing no significant gains beyond that point.
