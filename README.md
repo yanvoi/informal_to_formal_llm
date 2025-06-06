@@ -53,7 +53,7 @@ In the repository, you can find the model card with detailed information about t
 - 🤖 Hosting of the trained model on Hugging Face Hub
 - 🌐 REST API integrated with the frontend (Streamlit)
 - 👍👎 Feedback component (saves user ratings to a database)
-- 📈 Evaluation metrics BLEU / ROUGE available in MLflow
+- 📈 Evaluation metrics BERTScore / ROUGE available in MLflow
 - 🔒 Error handling and input data validation
 
 ---
