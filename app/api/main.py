@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from fastapi import FastAPI
+
 from api.llm.model import LLMService
 from api.llm.utils import REPO_ID
 
@@ -35,7 +36,9 @@ def read_root():
 
 
 @app.post("/formalize")
-def formalize_text(request: TextRequest, llm_service: LLMService = Depends(get_llm_service)):
+def formalize_text(
+    request: TextRequest, llm_service: LLMService = Depends(get_llm_service)
+):
     """
     Formalize the input text.
 
