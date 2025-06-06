@@ -15,9 +15,9 @@ The trained model is available via a REST API and integrated with a web applicat
 A detailed description of the experiments (fine-tuning, metrics, model comparisons) is available in the MLflow system:
 🔗 [Check the experiments on MLflow](https://dagshub.com/informal2formal/mlflow/experiments)
 
-## Architecture Diagram
+## 🖥️ MLOps Architecture Diagram
 
-The architecture of the project is designed to facilitate the training, evaluation, and deployment of the text formalization model. Below is a high-level overview of the components involved:
+The MLOps architecture of the project is designed to facilitate the training, evaluation, and deployment of the text formalization model. Below is a high-level overview of the components involved:
 
 ![Architecture Diagram](/docs/archi.drawio.png)
 
