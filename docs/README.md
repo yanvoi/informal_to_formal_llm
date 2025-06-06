@@ -15,6 +15,19 @@ The trained model is available via a REST API and integrated with a web applicat
 A detailed description of the experiments (fine-tuning, metrics, model comparisons) is available in the MLflow system:
 🔗 [Check the experiments on MLflow](https://dagshub.com/informal2formal/mlflow/experiments)
 
+## Architecture Diagram
+
+The architecture of the project is designed to facilitate the training, evaluation, and deployment of the text formalization model. Below is a high-level overview of the components involved:
+
+![Architecture Diagram](/docs/archi.drawio.png)
+
+- **DagsHub**: DVC and MLflow integration, allowing version control of datasets and experiments in cloud.
+- **Unsloth**: Framework for fine-tuning large language models (LLMs) using QLoRA and other quantization techniques.
+- **Hugging Face Hub**: Hosting the trained model, making it accessible for inference and integration with applications.
+- **FastAPI**: REST API for serving the model, enabling interaction with the frontend and handling requests for text formalization.
+- **Streamlit**: Web application framework for building interactive user interfaces, allowing users to interact with the model and provide feedback.
+- **MongoDB**: Database for storing user feedback for the formalization results, enabling continuous improvement of the model based on user interactions.
+
 ## 📄 Dataset
 The synthetic dataset used for training and evaluation is publicly available on DagsHub:
 
@@ -101,7 +114,7 @@ The LLMs were fine-tuned on the synthetic dataset to specialize in the task of t
 Quantization techniques were applied to reduce the size of the trained models, making them more efficient for deployment without significant loss in performance. This step was crucial for integrating the models into the web application and REST API.
 
 ### Evaluation Metrics
-The performance of the models was evaluated using BLEU and ROUGE metrics. These metrics provided insights into the quality of the formalized text compared to the reference sentences.
+The performance of the models was evaluated using BERTScore and ROUGE metrics. These metrics provided insights into the quality of the formalized text compared to the reference sentences.
 
 ### Data Augmentation
 Synthetic data generation was a key component of the training process. By leveraging instruction-tuned LLMs, a large and diverse dataset was created, which significantly improved the robustness of the models.
@@ -110,8 +123,8 @@ Synthetic data generation was a key component of the training process. By levera
 
 ## 📄 Authors
 
-- Jan Wojciechowski – 473553
-- Sebastian Jerzykiewicz – 473615
+- Jan Wojciechowski – 473553  
+- Sebastian Jerzykiewicz – 473615  
 - Jędrzej Rybczyński – 456532
 
 ## 🔚 Conclusions
