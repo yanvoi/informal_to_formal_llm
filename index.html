@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="None">
+        <meta name="author" content="JJS">
+        
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <title>informal_to_formal_llm</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/fontawesome.min.css" rel="stylesheet">
+        <link href="css/brands.min.css" rel="stylesheet">
+        <link href="css/solid.min.css" rel="stylesheet">
+        <link href="css/v4-font-face.min.css" rel="stylesheet">
+        <link href="css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body class="homepage">
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href=".">informal_to_formal_llm</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="." class="nav-link active" aria-current="page">📝 Text Formalization in the Polish Language</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="getting-started/" class="nav-link">Getting started</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" class="nav-link disabled">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="getting-started/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#text-formalization-in-the-polish-language" class="nav-link">📝 Text Formalization in the Polish Language</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#project-description" class="nav-link">📌 Project Description</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#dataset" class="nav-link">📄 Dataset</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#hugging-face-model" class="nav-link">🤖 Hugging Face Model</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#application-features" class="nav-link">⚙️ Application Features</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#launch-instructions" class="nav-link">🚀 Launch Instructions</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#project-structure" class="nav-link">📁 Project Structure</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#techniques-used" class="nav-link">🧠 Techniques Used</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#authors" class="nav-link">📄 Authors</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#conclusions" class="nav-link">🔚 Conclusions</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="text-formalization-in-the-polish-language">📝 Text Formalization in the Polish Language</h1>
+<h2 id="project-description">📌 Project Description</h2>
+<p>The goal of this project is to create a system that automatically transforms informal Polish utterances into their formal equivalents. Such a tool is particularly useful in academic, professional, and administrative contexts, where maintaining a professional tone is essential.</p>
+<p>The solution is based on machine learning – we prepared a synthetic dataset (pairs: informal sentence – formal sentence) used to train and evaluate the language model.</p>
+<p>The synthetic corpus was generated using available large language models (LLMs), including instruction-tuned models in chat mode. This enabled the rapid creation of a large number of high-quality linguistic examples, which significantly improved the effectiveness of the fine-tuning process.</p>
+<p>The models were trained and evaluated in the Google Colab environment, providing flexibility and easy access to GPU resources. This allowed efficient experimentation without the need to configure a local computing environment.</p>
+<p>The trained model is available via a REST API and integrated with a web application built using Streamlit. The user interface also includes a feedback component (thumbs up/down), which stores user ratings in a database.</p>
+<p>A detailed description of the experiments (fine-tuning, metrics, model comparisons) is available in the MLflow system:
+🔗 <a href="https://dagshub.com/informal2formal/mlflow/experiments">Check the experiments on MLflow</a></p>
+<h2 id="dataset">📄 Dataset</h2>
+<p>The synthetic dataset used for training and evaluation is publicly available on DagsHub:</p>
+<p>🔗 <a href="https://dagshub.com/informal2formal/mlflow/datasets">Check the generated dataset on DagsHub</a></p>
+<p>It contains pairs of informal and formal Polish sentences generated using instruction-tuned large language models.</p>
+<hr />
+<h2 id="hugging-face-model">🤖 Hugging Face Model</h2>
+<p>The final trained model is publicly available on the 🤗 <strong>Hugging Face Hub</strong>:</p>
+<p>🔗 <a href="https://huggingface.co/directtt/Llama-PLLuM-8B-instruct-informal2formal-SFT">directtt/Llama-PLLuM-8B-instruct-informal2formal-SFT</a></p>
+<p>In the repository, you can find the model card with detailed information about the training process, evaluation metrics, and usage instructions.</p>
+<hr />
+<h2 id="application-features">⚙️ Application Features</h2>
+<ul>
+<li>🔄 Automatic text formalization (from informal to formal)</li>
+<li>🤖 Hosting of the trained model on Hugging Face Hub</li>
+<li>🌐 REST API integrated with the frontend (Streamlit)</li>
+<li>👍👎 Feedback component (saves user ratings to a database)</li>
+<li>📈 Evaluation metrics BLEU / ROUGE available in MLflow</li>
+<li>🔒 Error handling and input data validation</li>
+</ul>
+<hr />
+<h2 id="launch-instructions">🚀 Launch Instructions</h2>
+<h3 id="1-clone-the-repository">1. Clone the repository</h3>
+<pre><code class="language-bash">git clone https://github.com/yanvoi/informal_to_formal_llm.git
+cd informal_to_formal_llm
+</code></pre>
+<h3 id="2-launch-the-environment">2. Launch the environment</h3>
+<p>Instructions for setting up the environment can be found in the <code>README.md</code> file in the <code>app</code> folder.</p>
+<p>🛠️ Note: All Python module versions and dependencies are listed in the pyproject.toml file.</p>
+<hr />
+<h2 id="project-structure">📁 Project Structure</h2>
+<pre><code>informal_to_formal_llm/
+│
+├── app/
+│   ├── api/                 # API code
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   ├── ui/                  # Streamlit frontend
+│   │   ├── main.py
+│   ├── README.md            # App-specific setup instructions
+├── informal_to_formal/
+│   ├── data_preprocessor/   # Data preprocessing scripts
+│   ├── evaluation/          # Model evaluation tools
+│   ├── training/            # Model training scripts
+│   ├── utils/               # Helper functions
+│   ├── __init__.py
+├── notebooks/               # Jupyter notebooks for experimentation
+├── tests/                   # Unit tests
+├── pyproject.toml           # Project dependencies and configuration
+├── README.md                # Main project README (this file)
+</code></pre>
+<hr />
+<h2 id="techniques-used">🧠 Techniques Used</h2>
+<h3 id="few-shot-prompting">Few-Shot Prompting</h3>
+<p>Few-shot prompting was employed to guide the large language models (LLMs) in generating high-quality synthetic data. By providing a few examples of informal-to-formal transformations, the models were able to generalize and produce a diverse set of sentence pairs.</p>
+<h3 id="fine-tuning">Fine-Tuning</h3>
+<p>The LLMs were fine-tuned on the synthetic dataset to specialize in the task of text formalization. This process involved adjusting the pre-trained weights of the models to better align with the specific task requirements.</p>
+<h3 id="quantization">Quantization</h3>
+<p>Quantization techniques were applied to reduce the size of the trained models, making them more efficient for deployment without significant loss in performance. This step was crucial for integrating the models into the web application and REST API.</p>
+<h3 id="evaluation-metrics">Evaluation Metrics</h3>
+<p>The performance of the models was evaluated using BLEU and ROUGE metrics. These metrics provided insights into the quality of the formalized text compared to the reference sentences.</p>
+<h3 id="data-augmentation">Data Augmentation</h3>
+<p>Synthetic data generation was a key component of the training process. By leveraging instruction-tuned LLMs, a large and diverse dataset was created, which significantly improved the robustness of the models.</p>
+<hr />
+<h2 id="authors">📄 Authors</h2>
+<ul>
+<li>Jan Wojciechowski – 473553</li>
+<li>Sebastian Jerzykiewicz – 473615</li>
+<li>Jędrzej Rybczyński – 456532</li>
+</ul>
+<h2 id="conclusions">🔚 Conclusions</h2>
+<ul>
+<li>We did not use the GYAFC corpus, despite our efforts to obtain it, for the following reasons:</li>
+<li>Translating it to Polish would have been a significant challenge.</li>
+<li>
+<p>The quality of the corpus was rather poor, with sentences often being ambiguous.</p>
+</li>
+<li>
+<p>Unsloth provided a better interface for fine-tuning and utilizing large language models (LLMs), making it our preferred choice.</p>
+</li>
+<li>
+<p>The performance of the trained models improved with an increasing number of epochs, but the improvements plateaued after two epochs, showing no significant gains beyond that point.</p>
+</li>
+</ul></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = ".",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="js/base.js"></script>
+        <script src="search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2025-06-06 18:41:07.156274+00:00
+-->
